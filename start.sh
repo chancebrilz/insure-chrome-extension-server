@@ -1,3 +1,3 @@
 #!/bin/sh
 
-pm2 start npm -- start
+pm2 start index.js
