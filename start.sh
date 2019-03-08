@@ -1,3 +1,3 @@
 #!/bin/sh
 
-pm2 start index.js
+PORT=80 pm2 start index.js
