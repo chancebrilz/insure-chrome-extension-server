@@ -19,7 +19,9 @@ app.get("/", (req, res) => {
 });
 
 app.get("/blacklist", (req, res) => {
-  Blacklist.find({}, (err, results) => {
+  const query = Blacklist.find({}).limit(100);
+
+  query.exec((err, results) => {
     return res.json(results);
   });
 });
