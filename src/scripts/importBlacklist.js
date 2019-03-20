@@ -2,17 +2,29 @@ const fs = require('fs');
 const es = require('event-stream');
 const db = require('../db.js');
 
-const Blacklist = db.Blacklist;
+const { mongoose, Blacklist } = db;
 
+/**
+ * Constants
+ */
 const FILENAME = "./src/scripts/blacklist.txt";
 
-db.connection.connection.once('open', function() { 
+/**
+ * Wait for the database connection to open before running
+ */
+db.mongoose.connection.once('open', function() { 
     processFile(FILENAME);
 });
 
+
+/**
+ * Read file line by line
+ */
 function processFile(inputFile) {
     let itemCount = 0;
     let items = [];
+
+    console.log('Reading file...');
 
     const s = fs
         .createReadStream(inputFile)
@@ -28,10 +40,16 @@ function processFile(inputFile) {
                 });
 
                 // Batch insert
-                if(itemCount % 1000 === 0) {
+                if(itemCount % 100 === 0) {
+
+                    // Print to screen the current status
+                    if(itemCount % 10000 === 0) {
+                        console.log(`Inserted ${itemCount.toLocaleString()} items.`);
+                    }
+
+                    // Insert
                     Blacklist.insertMany(items).then(function() {
-                        console.log(`Inserted ${itemCount} items.`);
-                        items = [];
+                        items.length = 0;
                         s.resume();
                     });
                 } else {

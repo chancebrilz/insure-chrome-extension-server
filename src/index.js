@@ -6,14 +6,17 @@ const db = require("./db");
 const Blacklist = db.Blacklist;
 
 app.get("/", (req, res) => {
-  if ("ip" in req.query) {
-    return res.json({
-      ip: req.query.ip,
-      status: "unknown"
-    });
+  if ("url" in req.query) {
+
+    Blacklist.find({
+      url: req.query.url
+    })
+    .then((item) => res.json(item))
+    .catch((err) => res.json(err));
+
   } else {
     return res.json({
-      error: "No IP address supplied"
+      error: "No URI address supplied"
     });
   }
 });

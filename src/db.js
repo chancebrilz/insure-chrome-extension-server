@@ -17,6 +17,6 @@ const BlacklistSchema = new mongoose.Schema({
 const Blacklist = mongoose.model("Blacklist", BlacklistSchema);
 
 module.exports = {
-  connection: mongoose,
+  mongoose: mongoose,
   Blacklist: Blacklist
 };
