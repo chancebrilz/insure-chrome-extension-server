@@ -16,7 +16,7 @@ app.get("/", (req, res) => {
 
   } else {
     return res.json({
-      error: "No URI address supplied"
+      error: "No URL supplied"
     });
   }
 });
