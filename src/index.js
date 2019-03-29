@@ -7,13 +7,22 @@ const Blacklist = db.Blacklist;
 
 app.get("/", (req, res) => {
   if ("url" in req.query) {
-
     Blacklist.find({
       url: req.query.url
     })
-    .then((item) => res.json(item))
-    .catch((err) => res.json(err));
-
+      .then(item => {
+        if (item.length > 0) {
+          return res.json(item[0]);
+        } else {
+          return res.json(
+            new Blacklist({
+              url: req.query.url,
+              malicious: false
+            })
+          );
+        }
+      })
+      .catch(err => res.json(err));
   } else {
     return res.json({
       error: "No URL supplied"
