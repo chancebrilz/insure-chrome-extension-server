@@ -1,4 +1,4 @@
-from get_database_phishtank import update_db
+from getDB import update_db
 import argparse
 import extract
 
