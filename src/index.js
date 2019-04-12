@@ -2,8 +2,11 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
 const db = require("./db");
+const cors = require("cors");
 
 const Blacklist = db.Blacklist;
+
+app.use(cors());
 
 app.get("/", (req, res) => {
   if ("url" in req.query) {
