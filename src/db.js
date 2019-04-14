@@ -14,9 +14,16 @@ const BlacklistSchema = new mongoose.Schema({
   malicious: Boolean
 });
 
+const LogSchema = new mongoose.Schema({
+  url: String,
+  length: Number
+});
+
 const Blacklist = mongoose.model("Blacklist", BlacklistSchema);
+const Log = mongoose.model("Log", LogSchema);
 
 module.exports = {
   mongoose: mongoose,
-  Blacklist: Blacklist
+  Blacklist: Blacklist,
+  Log: Log
 };
