@@ -3,6 +3,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 const db = require("./db");
 const cors = require("cors");
+const nn = require("./nn.js");
 
 //= Used to track time for logs
 const { performance } = require("perf_hooks");
@@ -20,7 +21,7 @@ app.get("/", (req, res) => {
     Blacklist.find({
       url: url
     })
-      .then(item => {
+      .then(async item => {
         const endTime = performance.now();
 
         // Create log
@@ -33,14 +34,20 @@ app.get("/", (req, res) => {
 
         // Return response
         if (item.length > 0) {
-          return res.json(item[0]);
+          const b = item[0];
+
+          return res.json({
+            url: b.url,
+            malicious: b.malicious
+          });
         } else {
-          return res.json(
-            new Blacklist({
-              url: url,
-              malicious: false
-            })
-          );
+          const [good, confidence] = await nn.lookup(url);
+
+          return res.json({
+            url: url,
+            malicious: !good,
+            confidence: confidence
+          });
         }
       })
       .catch(err => {
