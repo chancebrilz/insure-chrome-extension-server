@@ -24,17 +24,21 @@ app.get("/", (req, res) => {
       .then(async item => {
         const endTime = performance.now();
 
-        // Create log
-        const log = new Log({
-          url: url,
-          length: endTime - startTime
-        });
+        const saveLog = () => {
+          // Create log
+          const log = new Log({
+            url: url,
+            length: endTime - startTime
+          });
 
-        log.save().catch(err => console.log("Log Error:", err));
+          log.save().catch(err => console.log("Log Error:", err));
+        };
 
         // Return response
         if (item.length > 0) {
           const b = item[0];
+
+          saveLog();
 
           return res.json({
             url: b.url,
@@ -42,6 +46,8 @@ app.get("/", (req, res) => {
           });
         } else {
           const [good, confidence] = await nn.lookup(url);
+
+          saveLog();
 
           return res.json({
             url: url,
