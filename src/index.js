@@ -22,9 +22,9 @@ app.get("/", (req, res) => {
       url: url
     })
       .then(async item => {
-        const endTime = performance.now();
-
         const saveLog = () => {
+          const endTime = performance.now();
+
           // Create log
           const log = new Log({
             url: url,
