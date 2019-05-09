@@ -16,6 +16,7 @@ app.use(cors());
 app.get("/", (req, res) => {
   if ("url" in req.query) {
     const url = req.query.url || "";
+    const fullUrl = req.query.fullUrl;
     const startTime = performance.now();
 
     Blacklist.find({
@@ -45,12 +46,13 @@ app.get("/", (req, res) => {
             malicious: b.malicious
           });
         } else {
-          const [good, confidence] = await nn.lookup(url);
+          const urlToUse = fullUrl ? fullUrl : url;
+          const [good, confidence] = await nn.lookup(urlToUse);
 
           saveLog();
 
           return res.json({
-            url: url,
+            url: urlToUse,
             malicious: !good,
             confidence: confidence
           });
