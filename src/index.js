@@ -48,12 +48,13 @@ app.get("/", (req, res) => {
         } else {
           const urlToUse = fullUrl ? fullUrl : url;
           const [good, confidence] = await nn.lookup(urlToUse);
+          const malicious = !good && (confidence > .80);
 
           saveLog();
 
           return res.json({
             url: urlToUse,
-            malicious: !good,
+            malicious: malicious,
             confidence: confidence
           });
         }
